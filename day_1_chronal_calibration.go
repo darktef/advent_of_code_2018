@@ -68,10 +68,10 @@ func check(e error) {
 }
 
 func main() {
-	PartTwo()
+	partTwo()
 }
 
-func PartOne() {
+func partOne() {
 	result := 0
 
 	f, err := os.Open("day_1_input")
@@ -90,36 +90,44 @@ func PartOne() {
 	fmt.Println(result)
 }
 
-func PartTwo() {
+func partTwo() {
+	freqs := getFreqList()
 	dictionary := make(map[int]int)
 	result := 0
+	round := 0
+
+	for n := 0; n <= len(freqs); n++ {
+		if n == len(freqs) {
+			n = 0
+			round += 1
+		}
+
+		result += freqs[n]
+		if dictionary[result] != 0 {
+			fmt.Println(result)
+			break
+		} else {
+			dictionary[result] = 1
+		}
+	}
+}
+
+func getFreqList() []int {
+	var freq []int
 
 	f, err := os.Open("day_1_input")
 	check(err)
 
-	ans := false
-
-	for ans != true {
-		scanner := bufio.NewScanner(f)
-		for scanner.Scan() {
-			t, err := strconv.Atoi(scanner.Text())
-			check(err)
-			result += t
-
-			fmt.Println(t)
-			fmt.Println(result)
-
-			if dictionary[result] > 0 {
-				fmt.Println(result)
-				ans = true
-				break
-			} else {
-				dictionary[result] = 1
-			}
-		}
-
-		err = scanner.Err()
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		num, err := strconv.Atoi(scanner.Text())
 		check(err)
+
+		freq = append(freq, num)
 	}
 
+	err = scanner.Err()
+	check(err)
+
+	return freq
 }
