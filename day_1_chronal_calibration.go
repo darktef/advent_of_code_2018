@@ -55,79 +55,76 @@ What is the first frequency your device reaches twice?
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
+  "bufio"
+  "fmt"
+  "os"
+  "strconv"
 )
 
 func check(e error) {
-	if e != nil {
-		panic(e)
-	}
+  if e != nil {
+    panic(e)
+  }
 }
 
 func main() {
-	partTwo()
+  partTwo()
 }
 
 func partOne() {
-	result := 0
+  result := 0
 
-	f, err := os.Open("day_1_input")
-	check(err)
+  f, err := os.Open("day_1_input")
+  check(err)
 
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		t, err := strconv.Atoi(scanner.Text())
-		check(err)
-		result += t
-	}
+  scanner := bufio.NewScanner(f)
+  for scanner.Scan() {
+    t, err := strconv.Atoi(scanner.Text())
+    check(err)
+    result += t
+  }
 
-	err = scanner.Err()
-	check(err)
+  err = scanner.Err()
+  check(err)
 
-	fmt.Println(result)
+  fmt.Println(result)
 }
 
 func partTwo() {
-	freqs := getFreqList()
-	dictionary := make(map[int]int)
-	result := 0
-	round := 0
+  numbers := getNumberList()
+  frequencyMap := make(map[int]int)
+  result := 0
 
-	for n := 0; n <= len(freqs); n++ {
-		if n == len(freqs) {
-			n = 0
-			round += 1
-		}
+  for i := 0; i <= len(numbers); i++ {
+    if i == len(numbers) {
+      i = 0
+    }
 
-		result += freqs[n]
-		if dictionary[result] != 0 {
-			fmt.Println(result)
-			break
-		} else {
-			dictionary[result] = 1
-		}
-	}
+    result += numbers[i]
+    frequencyMap[result] += 1
+    if frequencyMap[result] > 1 {
+      fmt.Println(result)
+      break
+    }
+  }
 }
 
-func getFreqList() []int {
-	var freq []int
+func getNumberList() []int {
+  var numbers []int
 
-	f, err := os.Open("day_1_input")
-	check(err)
+  f, err := os.Open("day_1_input")
+  check(err)
 
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		num, err := strconv.Atoi(scanner.Text())
-		check(err)
+  scanner := bufio.NewScanner(f)
+  for scanner.Scan() {
+    num, err := strconv.Atoi(scanner.Text())
+    check(err)
 
-		freq = append(freq, num)
-	}
+    numbers = append(numbers, num)
+  }
 
-	err = scanner.Err()
-	check(err)
+  err = scanner.Err()
+  check(err)
 
-	return freq
+  return numbers
 }

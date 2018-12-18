@@ -39,69 +39,125 @@ What letters are common between the two correct box IDs? (In the example above, 
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
+  "bufio"
+  "fmt"
+  "os"
 )
 
 func main() {
-	result = partOne()
+  result := partTwo()
 
-	fmt.Println("The result is %s", result)
+  fmt.Println("The result is %s", result)
 }
 
 func partOne() int {
-	f, err := os.Open("day_2_input")
-	check(err)
+  f, err := os.Open("day_2_input")
+  check(err)
 
-	scanner := bufio.NewScanner(f)
-	globalTwos := 0
-	globalThrees := 0
+  scanner := bufio.NewScanner(f)
+  globalTwos := 0
+  globalThrees := 0
 
-	for scanner.Scan() {
-		t := scanner.Text()
+  for scanner.Scan() {
+    t := scanner.Text()
 
-		// Those sequences represent Unicode code points, called runes.
-		// ref: https://blog.golang.org/strings
-		freqs := make(map[rune]int)
-		twos := 0
-		threes := 0
+    // Those sequences represent Unicode code points, called runes.
+    // ref: https://blog.golang.org/strings
+    freqs := make(map[rune]int)
+    twos := 0
+    threes := 0
 
-		for _, runeValue := range t {
-			// If the requested key doesn't exist, we get the value type's zero value.
-			// ref: https://blog.golang.org/go-maps-in-action
-			freqs[runeValue] += 1
-		}
+    for _, runeValue := range t {
+      // If the requested key doesn't exist, we get the value type's zero value.
+      // ref: https://blog.golang.org/go-maps-in-action
+      freqs[runeValue] += 1
+    }
 
-		for _, v := range freqs {
-			if v == 2 {
-				twos += 1
-			} else if v == 3 {
-				threes += 1
-			}
+    for _, v := range freqs {
+      if v == 2 {
+        twos += 1
+      } else if v == 3 {
+        threes += 1
+      }
 
-			if twos >= 1 && threes >= 1 {
-				break
-			}
-		}
+      if twos >= 1 && threes >= 1 {
+        break
+      }
+    }
 
-		if twos >= 1 {
-			globalTwos += 1
-		}
+    if twos >= 1 {
+      globalTwos += 1
+    }
 
-		if threes >= 1 {
-			globalThrees += 1
-		}
-	}
+    if threes >= 1 {
+      globalThrees += 1
+    }
+  }
 
-	return globalTwos * globalThrees
+  return globalTwos * globalThrees
 }
 
-func partTwo() {
+/**
+Inspire by the checksum approach, if two strings are only differ by one rune, their checksum difference will be differ by no more than 26, assuming their checksum function is sum(rune * freq)
+
+1. Iterate through the files, get checksum for each string
+2. Find the pair which their checksum are only diff by 26
+3. Manually iterate through the pair to confirm that is the case, a. mis-order b. 1+9=5+5 kind effect
+**/
+func partTwo() string {
+  f, err := os.Open("day_2_input")
+  check(err)
+
+  scanner := bufio.NewScanner(f)
+
+  codes := make([]string, 1)
+
+  for scanner.Scan() {
+    code := scanner.Text()
+    codes = append(codes, code)
+  }
+
+  var result string
+  for i := 0; i < len(codes); i++ {
+    for j := i+1; j < len(codes); j++ {
+      mismatchIndex := moreThanOneMismatch(codes[i], codes[j])
+      if  mismatchIndex != -1 {
+        var str1 = codes[i][:mismatchIndex]
+        var str2 = codes[i][(mismatchIndex + 1):]
+
+        result = str1 + str2
+        break
+      }
+    }
+  }
+
+  return result
+}
+
+func moreThanOneMismatch(s1, s2 string) int {
+  var mismatches int
+  var mismatchPosition int
+
+  for i := 0; i < len(s1); i++ {
+    if s1[i] != s2[i] {
+      mismatches++
+      mismatchPosition = i
+    }
+
+    if mismatches > 1 {
+      return -1
+    }
+  }
+
+  if mismatches == 0 {
+    return -1
+  }
+
+  return mismatchPosition
 }
 
 func check(e error) {
-	if e != nil {
-		panic(e)
-	}
+  if e != nil {
+    panic(e)
+  }
 }
