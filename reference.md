@@ -4,3 +4,5 @@
 3. [Go Development Environment for Vim (vim-go)](https://blog.golang.org/)
 4. [Go Installation](http://sourabhbajaj.com/mac-setup/Go/README.html)
 5. [aststeve - advent of code 2018 in go](https://github.com/atssteve/advent_of_code_2018)
+6. [Golang学习 - bufio 包](https://www.cnblogs.com/golove/p/3282667.html)
+7. [Golang开发环境搭建-Vim篇](https://tonybai.com/2014/11/07/golang-development-environment-for-vim/)
